@@ -8,8 +8,10 @@
 
 ## systemd Unit files
 
-Basic Unit file (for a Service Unit):
-> The location of the file depends, but might be located at `/usr/local/lib/systemd/system`.
+Common systemd Unit file locations (Unit files found in directories listed earlier override files in directories lower in the list):
+- `/etc/systemd/system`. Meant for custom system wide Units (created by system admins).
+- `/usr/local/lib/systemd/system`. Meant for custom system wide Units (installed by system admins).
+- `/usr/lib/systemd/system` or `/lib/systemd/system`. Do not put custom Unit files here (meant for the system itself).
 
 ```txt
 # myservice.service
@@ -30,4 +32,19 @@ WantedBy=multi-user.target
 # Manually start / stop service units
 systemctl start myservice.service
 systemctl stop myservice.service
+```
+
+```bash
+# Configure the service unit to automatically start on system boot
+systemctl enable myservice.service
+```
+
+```bash
+# Check service status
+systemctl status myservice.service
+```
+
+```bash
+# Read output from service (stdout/stderr)
+sudo journalctl -u myservice.service
 ```
