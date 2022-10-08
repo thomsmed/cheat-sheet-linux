@@ -7,6 +7,7 @@
 - [System calls](system-calls.md)
 - [SSH](ssh.md)
 - [TLS](tls.md)
+- [GPG](gpg.md)
 - [IPC (Inter-process Communication)](ipc.md)
 - [Concurrency](concurrency.md)
 - [Network](network.md)
