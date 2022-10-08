@@ -27,6 +27,11 @@ Keys added to the ssh config with `AddKeysToAgent yes` are automatically added t
 Host *
   AddKeysToAgent yes
   IdentityFile ~/.ssh/id_rsa
+  
+Host github.com
+  HostName github.com
+  AddKeysToAgent yes
+  IdentityFile ~/.ssh/github-ssh-key
 
 Host RaspberryPi4
   IgnoreUnknown UseKeychain
