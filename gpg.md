@@ -10,6 +10,20 @@ Use GPG keys to sign your git commits
 git config --global user.signingkey <gpg-key-id> # E.g git config --global user.signingkey 3AA5C34371567BD2
 ```
 
+Encrypt files
+```bash
+# Add multiple --recipent flags to add to the list of people able to decrypt the file
+gpg --output some-file.txt.gpg --encrypt --recipient recipent@email.com some-file.txt
+```
+
+Decrypt files
+```bash
+gpg --output some-file.txt --decrypt some-file.txt.gpg
+
+# Decrypt files encrypted with a symmetric key
+gpg --output some-file.txt.gpg --symmetric some-file.txt
+```
+
 ## GPG Key pair management
 
 Install latest GPG suite at https://gnupg.org/download/index.html
