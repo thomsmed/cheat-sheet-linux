@@ -10,5 +10,5 @@
 - [GPG](gpg.md)
 - [IPC (Inter-process Communication)](ipc.md)
 - [Concurrency](concurrency.md)
-- [Network](network.md)
+- [Networking](networking.md)
 - [Virtual Network Computing (VNC)](vnc.md)
