@@ -1,4 +1,4 @@
-# Authentication with ssh
+# SSH - OpenSSH remote login client
 
 ```bash
 # Generate new ssh key pair (RSA is default)
@@ -50,6 +50,7 @@ ssh RaspberryPi4
 ```
 
 ## Restart SSH Agent
+
 ```shell
 # Kill current SSH Agent, then start it again and configures environment variables by evaluating the output from 'ssh-agent -s'
 ssh-agent -k && eval $(ssh-agent -s)
