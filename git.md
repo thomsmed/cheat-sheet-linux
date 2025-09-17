@@ -4,74 +4,70 @@ Git Cheat sheet
 
 ## Common tasks
 
-### Create local branch tracking a remote branch
+### Creating branches
 
 ```bash
+# Create local branch tracking a remote branch
 git checkout -b --track <branch> <remote>/<branch>
 ```
 
-### Pull and rebase on remote tracked branch
+### Rebasing
 
 ```bash
+# Pull and rebase on remote tracked branch
 git pull --rebase
 ```
 
-### Log only commits associated with a tag
+### View commit history
 
 ```bash
+# Commits associated with a tag
 git log --no-walk --tags
-```
 
-### Log commits that touch a specific file
-
-```bash
+# Commits that touch a specific file
 git log --follow <filename>
-```
 
-### Log git history between two points in history
+# Commits between two points in history
+# Note: If <commit2> is on a link directly reachable from <commit1>, these two notations gives the same result.
+git log <commit1>..<commit2> # Commits reachable from <commit2> but not from <commit1>.
+git log <commit1>...<commit2> # Commits reachable from <commit1> and <commit2>, but not from their common merge-base.
 
-Notations:
+# Only merge commits
+git log --pretty=oneline --merges x.y.z...origin/develop
 
-<commit1>..<commit2>: Commits reachable from <commit2> but not from <commit1>.
-<commit1>...<commit2>:  Commits reachable from <commit1> and <commit2>, but not from their common merge-base.
-> Note: If <commit2> is on a link directly reachable from <commit1>, these two notations gives the same result.
+# Only non-merge commits
+git log --pretty=oneline --no-merges x.y.z...origin/develop
 
-#### Only merge commits
+# Only direct commits, no branch commits
+git log --pretty=oneline --first-parent x.y.z...origin/develop
 
-```bash
+# Commits that touches a specific file
+git log --follow <filename>
+
+# Commits that touches a specific file/path, evaluating the whole git history
+git log --all --full-history -- "**/thefile.*"
+git log --all --full-history -p -- "**/thefile.*"  # -p will show the “patch”/diff introduced by a given commit
+
+# Pretty log only merge commits
 git log --pretty=oneline --merges x.y.z...origin/develop
 ```
 
-#### Only non-merge commits
+### View diffs
 
 ```bash
-git log --pretty=oneline --no-merges x.y.z...origin/develop
-```
+# Diff summary between two points in history
+# Note: If <commit2> is on a link directly reachable from <commit1>, these two notations gives the same result.
+git diff --stat <commit1>..<commit2> # Commits reachable from <commit2> but not from <commit1>.
+git diff --stat <commit1>...<commit2> # Commits reachable from <commit1> and <commit2>, but not from their common merge-base.
 
-#### Only direct commits, no branch commits
-
-```bash
-git log --pretty=oneline --first-parent x.y.z...origin/develop
-```
-
-### View the difference between two points in history
-
-Notations:
-
-<commit1>..<commit2>: Commits reachable from <commit2> but not from <commit1>.
-<commit1>...<commit2>:  Commits reachable from <commit1> and <commit2>, but not from their common merge-base.
-> Note: If <commit2> is on a link directly reachable from <commit1>, these two notations gives the same result.
-
-#### Diff summary
-
-```bash
-git diff --stat <commit1>...<commit2>
-```
-
-#### Complete diff
-
-```bash
+# Complete diff
 git diff <commit1>...<commit2>
 ```
 
-## Git LFS (Large File Storage)
+### Tags
+
+```bash
+# Delete local and remote tag
+git tag --delete 2.1.1
+git push origin :2.1.1 # Pushing an "empty" tag to the remote, effectively deleting the remote tag
+```
