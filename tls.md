@@ -270,23 +270,23 @@ It's easy! Just run the `x509` or the `ca` sub command again with the **same** p
 
 ## Misc
 
-### Generate a PKCS12 file
+### Generate a PFX (PKCS12) file
 
-A PKCS12 file is commonly used to bundle a private key together with it's x509 certificate (it's an archive file format)
-Generate PKCS12 file:
-> NB! You need to specify a export password! If the private key you pass inn is password protected, you can pass in the password with the `-passin` option.
+A PFX (PKCS12) file is commonly used to bundle a private key together with it's x509 certificate (it's an archive file format)
+
+> About the `pkcs12` sub command: You will be asked to specify an export password. And if the private key you pass inn is password protected, you can pass in the password with the `-passin` option.
 
 ```shell
 openssl pkcs12 -export -inkey localhost.key -in localhost.crt -out localhost.pfx
 ```
 
-Verify PKCS12 file:
+Verify PFX (PKCS12) file:
 
 ```shell
 openssl pkcs12 -in localhost.pfx -info
 ```
 
-### Extract .key and .crt from PKCS12 file
+### Extract .key and .crt from PFX (PKCS12) file
 
 ```shell
 # Extract private key
@@ -307,7 +307,7 @@ openssl rsa -in localhost.key -out localhost-decrypted.key
 openssl x509 -inform PEM -outform DER -in thomsmed.ca.crt -out thomsmed.ca.der
 ```
 
-### Convert PFX certificate file to PEM certificate file
+### Convert PFX (PKCS12) certificate file to PEM certificate file
 
 > gRPC Swift / SwiftNIO for example requires PEM certificate files.
 
