@@ -22,14 +22,13 @@ If the certificate is in DER format, you can calculate the hash with OpenSSL lik
 openssl x509 -in certificate.der -pubkey -noout -inform der | openssl pkey -pubin -outform der | openssl dgst -sha256 -binary | openssl enc -base64
 ```
 
-## Installing a self-signed root CA (Certificate Authority) Certificate
-
-Already have a CA certificate you want to install on a device? Then the simplest way is to email the cert, and then open the email om the devices you wish to install it on.
+## Creating a (Development) Certificate signed by a self-signed root CA (Certificate Authority) Certificate
 
 Resources:
 - [Igor Soarez: How to setup your own CA with OpenSSL](https://gist.github.com/Soarez/9688998)
 - [Creating Certificates for TLS Testing](https://developer.apple.com/library/archive/technotes/tn2326/_index.html#//apple_ref/doc/uid/DTS40014136)
 - [Generate an Azure Application Gateway self-signed certificate with a custom root CA](https://learn.microsoft.com/en-us/azure/application-gateway/self-signed-certificates)
+- [Generate self-signed certificates](https://learn.microsoft.com/en-us/dotnet/core/additional-tools/self-signed-certificates-guide#with-openssl)
 
 ### Self signed root CA (Certificate Authority) Certificate
 
@@ -41,7 +40,7 @@ Resources:
 openssl genrsa -out thomsmed.ca.key 2048
 ```
 
-**Alternative 2: Generate a EC key pair:**
+**Alternative 2: Generate a elliptic-curve (EC) key pair:**
 
 ```shell
 openssl ecparam -out thomsmed.ca.key -genkey -name prime256v1
@@ -55,7 +54,7 @@ openssl ecparam -out thomsmed.ca.key -genkey -name prime256v1
 openssl req -new -sha256 -key thomsmed.ca.key -out thomsmed.ca.csr
 ```
 
-> Note: This is the interactively way of generating a CSR, which is fine when generating the root CA Certificate.
+> Note: This is the interactive way of generating a CSR, which is fine when generating the root CA Certificate.
 
 **2: Generate a certificate using the CSR**
 
@@ -141,7 +140,29 @@ DNS.2 = thomsmed.lan
 Or using "inline" configuration file (using `list`):
 
 ```shell
-
+openssl req -new -key localhost.key -out localhost.csr -config <( \
+  echo '[ req ]'; \
+  echo 'utf8 = yes'; \
+  echo 'default_bits = 2048'; \
+  echo 'encrypt_key = no'; \
+  echo 'default_md = sha2'; \
+  echo 'prompt = no'; \
+  echo 'distinguished_name = req_distinguished_name'; \
+  echo 'req_extensions = req_extensions'; \
+  echo '[ req_distinguished_name ]'; \
+  echo 'C = NO'; \
+  echo 'ST = Vestland'; \
+  echo 'L = Bergen'; \
+  echo 'O  = Localhost'; \
+  echo 'OU = IT'; \
+  echo 'CN = localhost'; \
+  echo '[ req_extensions ]'; \
+  echo 'basicConstraints=CA:FALSE'; \
+  echo 'subjectAltName=@subject_alt_names'; \
+  echo 'subjectKeyIdentifier = hash'; \
+  echo '[ subject_alt_names ]'; \
+  echo 'DNS.1 = localhost'; \
+  echo 'DNS.2 = thomsmed.lan')
 ```
 
 **2: Generate (and sign) a certificate using the CSR**
@@ -176,7 +197,7 @@ DNS.2 = thomsmed.lan
 
 **Alternative 2: Using the `ca` sub command:**
 
-> About the `ca` sub command: The `ca` sub command takes a config file (`.conf`) used for signing the CSR. More info [here](https://gist.github.com/Soarez/9688998#openssl-ca)
+> About the `ca` sub command: The `ca` sub command takes a config file (`.conf`) used for signing the CSR. More info [here](https://gist.github.com/Soarez/9688998#openssl-ca).
 
 ```shell
 openssl ca -config thomsmed.ca.conf -in localhost.csr -out localhost.crt
@@ -232,6 +253,16 @@ organizationName = supplied
 organizationalUnitName = supplied
 commonName = supplied
 ```
+
+**Optional: Verify the newly created Certificate:**
+
+```shell
+openssl x509 -in localhost.crt -text -noout
+```
+
+### Installing a self-signed root CA (Certificate Authority) Certificate
+
+The simplest way is to email the cert, and then open the email om the devices you wish to install it on.
 
 ### Renewing Certificates
 
